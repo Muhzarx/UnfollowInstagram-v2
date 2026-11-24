@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0c10">
+  <title>UnfollowInstagram — Instagram Relationship Analyzer</title>
+  <meta name="description" content="Analisis followers Instagram secara privat. Tanpa login, tanpa password, langsung di browser.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <style>
+    :root{color-scheme:dark;--bg:#090a0e;--panel:#11131a;--panel2:#171a23;--line:rgba(255,255,255,.085);--text:#f5f6fa;--muted:#8d93a5;--purple:#9b8cff;--pink:#ff7eaa;--green:#65d6a3;--red:#ff7185;--blue:#78b7ff;--shadow:0 24px 80px rgba(0,0,0,.35)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 12% -10%,rgba(125,95,255,.16),transparent 34%),radial-gradient(ellipse at 100% 5%,rgba(255,105,158,.09),transparent 28%),var(--bg);color:var(--text);font-family:"DM Sans",sans-serif;min-height:100vh}
+    button,input{font:inherit}button{cursor:pointer}.shell{width:min(1160px,calc(100% - 36px));margin:auto}
+    .topbar{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+    .brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--text)}.brandmark{width:39px;height:39px;border-radius:13px;background:linear-gradient(135deg,#a18cff,#ff7ba8);display:grid;place-items:center;box-shadow:0 7px 24px rgba(155,140,255,.25)}.brandmark svg{width:21px;height:21px;stroke:#fff}.brandname{font:700 17px "Space Grotesk",sans-serif;letter-spacing:-.5px}.brandname span{color:var(--purple)}
+    .top-actions{display:flex;align-items:center;gap:10px}.privacy-pill{display:flex;align-items:center;gap:7px;border:1px solid rgba(101,214,163,.22);background:rgba(101,214,163,.07);color:#9ce9c4;padding:8px 12px;border-radius:99px;font-size:12px;font-weight:700}.privacy-pill i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+    .hero{padding:64px 0 34px;text-align:center}.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(155,140,255,.24);background:rgba(155,140,255,.08);color:#c3baff;padding:7px 12px;border-radius:99px;font-size:11px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase}.eyebrow .spark{font-size:14px}
+    h1{font:700 clamp(38px,6vw,66px)/1.04 "Space Grotesk",sans-serif;letter-spacing:-2.8px;margin:22px auto 15px;max-width:800px}h1 .gradient{background:linear-gradient(100deg,#b6aaff 8%,#ff9cbd 58%,#ffc18b);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{max-width:620px;margin:0 auto;color:var(--muted);font-size:15px;line-height:1.75}
+    .main-card{background:linear-gradient(145deg,rgba(24,26,36,.96),rgba(15,17,24,.98));border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:25px;box-shadow:var(--shadow);position:relative;overflow:hidden}.main-card:before{content:"";position:absolute;inset:0 25% auto;height:1px;background:linear-gradient(90deg,transparent,rgba(185,171,255,.55),transparent)}
+    .upload-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px}.upload-head h2{font:700 20px "Space Grotesk",sans-serif;margin:0 0 6px}.upload-head p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}.step{font-size:11px;font-weight:800;color:#bdb2ff;background:rgba(155,140,255,.12);padding:7px 10px;border-radius:8px;white-space:nowrap}
+    .upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.dropzone{min-height:174px;border:1px dashed rgba(180,170,255,.32);border-radius:17px;background:rgba(155,140,255,.035);padding:19px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:.2s;position:relative}.dropzone:hover,.dropzone.drag{border-color:var(--purple);background:rgba(155,140,255,.09);transform:translateY(-1px)}.dropzone.optional{border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.015)}.drop-icon{width:42px;height:42px;border-radius:13px;background:rgba(155,140,255,.14);display:grid;place-items:center;margin-bottom:12px;color:#c3baff}.dropzone.optional .drop-icon{background:rgba(255,255,255,.07);color:#b7bdca}.drop-icon svg{width:20px;height:20px}.dropzone strong{font-size:14px;margin-bottom:5px}.dropzone small{font-size:11px;color:var(--muted);line-height:1.5}.file-status{font-size:11px;color:var(--green);font-weight:700;margin-top:10px;min-height:15px}.file-input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+    .upload-bottom{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:18px}.privacy-note{display:flex;gap:8px;align-items:flex-start;color:var(--muted);font-size:11px;line-height:1.55;max-width:520px}.privacy-note svg{width:15px;height:15px;flex:none;color:var(--green);margin-top:1px}.primary-btn{border:0;border-radius:12px;padding:13px 19px;color:#100e1b;background:linear-gradient(110deg,#b4a7ff,#ff9cbd);font-weight:800;font-size:13px;box-shadow:0 8px 25px rgba(155,140,255,.18);transition:.2s;white-space:nowrap}.primary-btn:hover{transform:translateY(-2px);filter:brightness(1.06)}.primary-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}.secondary-btn{border:1px solid var(--line);background:rgba(255,255,255,.04);color:#e8e9ef;border-radius:10px;padding:10px 13px;font-size:12px;font-weight:700}.secondary-btn:hover{background:rgba(255,255,255,.08)}
+    .howto{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:12px;margin:19px 0 0}.howto button{background:none;border:0;color:#bdb2ff;font-weight:700;padding:0}
+    .results{display:none;padding:32px 0 70px}.results.show{display:block;animation:rise .45s ease}@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+    .result-title{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:18px}.result-title h2{font:700 27px "Space Grotesk",sans-serif;letter-spacing:-.8px;margin:0 0 5px}.result-title p{margin:0;color:var(--muted);font-size:12px}.result-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.stat{border:1px solid var(--line);background:linear-gradient(145deg,rgba(25,27,37,.95),rgba(16,18,25,.95));border-radius:16px;padding:17px;position:relative;overflow:hidden}.stat:after{content:"";position:absolute;width:90px;height:90px;right:-32px;top:-38px;border-radius:50%;background:var(--glow,rgba(155,140,255,.11));filter:blur(2px)}.stat-label{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.3px}.stat-value{font:700 29px "Space Grotesk",sans-serif;margin:9px 0 3px;letter-spacing:-1px}.stat-foot{font-size:10px;color:var(--muted)}.stat.pink{--glow:rgba(255,113,133,.13)}.stat.green{--glow:rgba(101,214,163,.13)}.stat.blue{--glow:rgba(120,183,255,.13)}
+    .workspace{display:grid;grid-template-columns:230px 1fr;gap:14px}.sidepanel,.listpanel{border:1px solid var(--line);background:rgba(17,19,26,.94);border-radius:17px;overflow:hidden}.sidepanel{padding:12px;height:max-content}.side-label{font-size:10px;color:#6f7586;font-weight:800;letter-spacing:1.2px;padding:9px 10px}.tab{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 10px;border:0;background:transparent;color:#a5aabb;border-radius:10px;text-align:left;font-size:12px;font-weight:700;margin:2px 0}.tab:hover{background:rgba(255,255,255,.04);color:white}.tab.active{background:rgba(155,140,255,.13);color:#d0c8ff}.tab .tab-left{display:flex;align-items:center;gap:9px}.tab svg{width:16px;height:16px}.count{font-size:10px;padding:3px 7px;border-radius:99px;background:rgba(255,255,255,.07);color:#aeb3c2}.tab.active .count{background:rgba(155,140,255,.2);color:#d5ceff}
+    .listpanel{min-width:0}.list-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:14px}.list-head h3{font:700 16px "Space Grotesk",sans-serif;margin:0 0 4px}.list-head p{font-size:11px;color:var(--muted);margin:0}.list-tools{display:flex;gap:8px;align-items:center}.searchbox{position:relative}.searchbox svg{position:absolute;left:11px;top:10px;width:14px;height:14px;color:#7e8495}.searchbox input{width:185px;background:#0d0f15;border:1px solid var(--line);border-radius:9px;padding:9px 10px 9px 32px;color:white;outline:none;font-size:11px}.searchbox input:focus{border-color:rgba(155,140,255,.6)}.list-scroll{max-height:490px;overflow:auto}.user-row{display:flex;align-items:center;gap:11px;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.045);transition:.15s}.user-row:hover{background:rgba(255,255,255,.025)}.avatar{width:35px;height:35px;border-radius:12px;display:grid;place-items:center;flex:none;background:linear-gradient(135deg,rgba(155,140,255,.25),rgba(255,126,170,.18));color:#d7ceff;font-size:12px;font-weight:800}.user-meta{min-width:0;flex:1}.username{font-size:12px;font-weight:800;color:#f0f1f6;text-decoration:none;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.username:hover{color:#c4b8ff;text-decoration:underline}.user-sub{font-size:10px;color:#737a8c;margin-top:3px}.profile-link{display:flex;align-items:center;gap:5px;text-decoration:none;border:1px solid var(--line);padding:7px 9px;border-radius:8px;color:#b9bdc9;font-size:10px;font-weight:700;white-space:nowrap}.profile-link:hover{border-color:rgba(155,140,255,.5);color:#d4ccff;background:rgba(155,140,255,.07)}.profile-link svg{width:12px;height:12px}.empty{padding:48px 20px;text-align:center;color:var(--muted);font-size:12px}.empty b{display:block;color:#e8e9ef;font-size:14px;margin-bottom:6px}.empty svg{width:28px;height:28px;color:var(--green);margin-bottom:12px}
+    .footer{border-top:1px solid var(--line);padding:23px 0 30px;color:#6f7585;font-size:11px;display:flex;align-items:center;justify-content:space-between;gap:15px}.footer a{color:#aaa0e9;text-decoration:none}.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#242635;border:1px solid rgba(255,255,255,.12);color:white;padding:11px 16px;border-radius:11px;font-size:12px;box-shadow:var(--shadow);transition:.25s;z-index:20}.toast.show{opacity:1;transform:translate(-50%,0)}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:20px;z-index:30}.modal-backdrop.show{display:flex}.modal{max-width:520px;width:100%;background:#151721;border:1px solid var(--line);border-radius:20px;padding:23px;box-shadow:var(--shadow)}.modal h3{font:700 20px "Space Grotesk",sans-serif;margin:0 0 10px}.modal p,.modal li{font-size:12px;color:#a7adbd;line-height:1.7}.modal ol{padding-left:19px}.modal-close{float:right;background:none;border:0;color:#9da3b3;font-size:22px}
+    @media(max-width:760px){.hero{padding:48px 0 26px}h1{letter-spacing:-1.8px}.main-card{padding:18px;border-radius:19px}.upload-grid{grid-template-columns:1fr}.dropzone{min-height:145px}.upload-bottom{align-items:stretch;flex-direction:column}.primary-btn{width:100%}.stats{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.sidepanel{display:grid;grid-template-columns:repeat(2,1fr);gap:2px}.side-label{grid-column:1/-1}.result-title{align-items:flex-start;flex-direction:column}.list-head{align-items:flex-start;flex-direction:column}.list-tools,.searchbox,.searchbox input{width:100%}.footer{align-items:flex-start;flex-direction:column}.privacy-pill{font-size:0;padding:9px}.privacy-pill i{width:8px;height:8px}.topbar{height:66px}}
+    @media(max-width:390px){.shell{width:calc(100% - 24px)}.stats{gap:8px}.stat{padding:13px}.stat-value{font-size:25px}.profile-link span{display:none}.profile-link{padding:8px}.sidepanel{grid-template-columns:1fr 1fr}.brandname{font-size:15px}}
+  </style>
+</head>
+<body>
+  <header class="shell topbar">
+    <a class="brand" href="#">
+      <span class="brandmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M16 3H8a5 5 0 0 0-5 5v8a5 5 0 0 0 5 5h8a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5Z"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg></span>
+      <span class="brandname">unfollow<span>instagram</span></span>
+    </a>
+    <div class="top-actions"><span class="privacy-pill"><i></i> 100% PRIVATE</span></div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <span class="eyebrow"><span class="spark">✦</span> YOUR FOLLOWER INSIGHTS</span>
+      <h1>Know your circle.<br><span class="gradient">Keep it real.</span></h1>
+      <p>Temukan siapa yang tidak follow back, siapa yang berhenti mengikuti, dan perubahan followers Instagram kamu. Tanpa login. Tanpa password. Semua diproses di perangkatmu.</p>
+    </section>
+
+    <section class="main-card" id="uploadCard">
+      <div class="upload-head">
+        <div><h2>Mulai analisis kamu</h2><p>Masukkan file ekspor Instagram. Upload ZIP langsung atau pilih file JSON secara manual.</p></div>
+        <span class="step">STEP 01 / 02</span>
+      </div>
+      <div class="upload-grid">
+        <label class="dropzone" id="currentDrop">
+          <input class="file-input" id="currentFile" type="file" accept=".zip,.json,application/zip,application/json" multiple>
+          <span class="drop-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg></span>
+          <strong>Data Instagram terbaru</strong><small>ZIP lengkap atau file followers_*.json<br>dan following.json</small>
+          <span class="file-status" id="currentStatus">Belum ada file dipilih</span>
+        </label>
+        <label class="dropzone optional" id="previousDrop">
+          <input class="file-input" id="previousFile" type="file" accept=".zip,.json,application/zip,application/json" multiple>
+          <span class="drop-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 2.64-6.36L3 8"/><path d="M3 3v5h5"/></svg></span>
+          <strong>Data Instagram sebelumnya <span style="color:#858b9b;font-weight:500">(opsional)</span></strong><small>ZIP atau file followers_*.json lama<br>untuk mendeteksi unfollower & followers baru</small>
+          <span class="file-status" id="previousStatus">Belum ada file dipilih</span>
+        </label>
+      </div>
+      <div class="upload-bottom">
+        <div class="privacy-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg><span>Privasi terjaga: file dibaca langsung oleh browser. Tidak ada akun Instagram yang dihubungkan dan file tidak dikirim ke server kami.</span></div>
+        <button class="primary-btn" id="analyzeBtn" disabled>Analyze my account&nbsp; →</button>
+      </div>
+      <div class="howto">Belum tahu cara download data? <button id="howtoBtn">Lihat panduan singkat</button></div>
+    </section>
+
+    <section class="results" id="results">
+      <div class="result-title">
+        <div><h2>Your Instagram overview</h2><p id="resultCaption">Analisis selesai. Pilih kategori untuk melihat detail akun.</p></div>
+        <div class="result-actions"><button class="secondary-btn" id="copyAllBtn">Copy usernames</button><button class="secondary-btn" id="exportAllBtn">↓ Export all CSV</button><button class="secondary-btn" id="resetBtn">New analysis</button></div>
+      </div>
+      <div class="stats">
+        <article class="stat"><div class="stat-label">TOTAL FOLLOWERS</div><div class="stat-value" id="followersStat">—</div><div class="stat-foot">Followers saat ini</div></article>
+        <article class="stat"><div class="stat-label">FOLLOWING</div><div class="stat-value" id="followingStat">—</div><div class="stat-foot">Akun yang kamu ikuti</div></article>
+        <article class="stat pink"><div class="stat-label">NOT FOLLOWING BACK</div><div class="stat-value" id="notBackStat">—</div><div class="stat-foot">Belum follow balik</div></article>
+        <article class="stat green"><div class="stat-label">UNFOLLOWED YOU</div><div class="stat-value" id="unfollowStat">—</div><div class="stat-foot" id="unfollowFoot">Butuh data lama</div></article>
+      </div>
+      <div class="workspace">
+        <aside class="sidepanel">
+          <div class="side-label">ANALYSIS</div>
+          <button class="tab active" data-tab="unfollow"><span class="tab-left"><span>↘</span> Unfollowed you</span><span class="count" id="count-unfollow">0</span></button>
+          <button class="tab" data-tab="notback"><span class="tab-left"><span>◎</span> Not following back</span><span class="count" id="count-notback">0</span></button>
+          <button class="tab" data-tab="new"><span class="tab-left"><span>↗</span> New followers</span><span class="count" id="count-new">0</span></button>
+          <button class="tab" data-tab="mutual"><span class="tab-left"><span>♡</span> Mutual followers</span><span class="count" id="count-mutual">0</span></button>
+          <div class="side-label">ALL ACCOUNTS</div>
+          <button class="tab" data-tab="followers"><span class="tab-left"><span>◉</span> All followers</span><span class="count" id="count-followers">0</span></button>
+          <button class="tab" data-tab="following"><span class="tab-left"><span>↗</span> All following</span><span class="count" id="count-following">0</span></button>
+        </aside>
+        <section class="listpanel">
+          <div class="list-head">
+            <div><h3 id="listTitle">Unfollowed you</h3><p id="listDescription">Akun yang sebelumnya mengikuti kamu, tetapi sekarang tidak lagi.</p></div>
+            <div class="list-tools"><div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="searchInput" type="search" placeholder="Search username..."></div><button class="secondary-btn" id="exportTabBtn">Export CSV</button></div>
+          </div>
+          <div class="list-scroll" id="userList"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell footer"><span>© <span id="year"></span> UnfollowInstagram · Made for your privacy.</span><span>Open source on <a href="https://github.com/Muhzarx/UnfollowInstagram" target="_blank" rel="noopener">GitHub ↗</a></span></footer>
+  <div class="toast" id="toast"></div>
+  <div class="modal-backdrop" id="howtoModal"><div class="modal"><button class="modal-close" id="closeModal">×</button><h3>Download Instagram data</h3><p>Ambil data langsung dari Instagram dalam format JSON:</p><ol><li>Buka Instagram → Settings and activity.</li><li>Masuk ke Accounts Center → Your information and permissions.</li><li>Pilih Download your information → Download or transfer information.</li><li>Pilih akun Instagram dan informasi Followers and following.</li><li>Pilih format JSON, lalu buat ekspor dan unduh file ZIP.</li><li>Upload ZIP terbaru di kotak pertama. Untuk mendeteksi unfollow, upload ZIP ekspor yang lebih lama di kotak kedua.</li></ol><p><b>Catatan:</b> data lama dan terbaru harus berasal dari akun yang sama. Satu ekspor saja tidak cukup untuk mengetahui siapa yang unfollow.</p></div></div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const state = { currentFiles: [], previousFiles: [], data: {}, active: "unfollow" };
+  const labels = {
+    unfollow:["Unfollowed you","Akun yang sebelumnya mengikuti kamu, tetapi sekarang tidak lagi."],
+    notback:["Not following back","Akun yang kamu ikuti, tetapi tidak mengikuti kamu balik."],
+    new:["New followers","Akun yang muncul sebagai followers di data terbaru."],
+    mutual:["Mutual followers","Akun yang saling mengikuti kamu."],
+    followers:["All followers","Semua akun yang mengikuti kamu saat ini."],
+    following:["All following","Semua akun yang kamu ikuti saat ini."]
+  };
+  $("year").textContent = new Date().getFullYear();
+
+  function toast(message){const el=$("toast");el.textContent=message;el.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove("show"),2600)}
+  function usernameFromEntry(entry){
+    if(typeof entry==="string") return cleanUsername(entry);
+    if(!entry || typeof entry!=="object") return "";
+    const s=Array.isArray(entry.string_list_data)?entry.string_list_data[0]:null;
+    return cleanUsername(entry.title || (s && (s.value || s.href)) || entry.username || "");
+  }
+  function cleanUsername(value){
+    if(!value) return "";
+    let s=String(value).trim();
+    const match=s.match(/instagram\.com\/([^/?#]+)/i);
+    if(match) s=match[1];
+    s=s.replace(/^@/,"").replace(/\/$/,"").trim();
+    if(!/^[a-zA-Z0-9._]{1,30}$/.test(s)) return "";
+    return s.toLowerCase();
+  }
+  function parseJsonText(text){
+    const obj=JSON.parse(text);
+    if(Array.isArray(obj)) return obj.map(usernameFromEntry).filter(Boolean);
+    if(obj && Array.isArray(obj.relationships_following)) return obj.relationships_following.map(usernameFromEntry).filter(Boolean);
+    if(obj && Array.isArray(obj.followers)) return obj.followers.map(usernameFromEntry).filter(Boolean);
+    return [];
+  }
+  async function readFiles(files){
+    const found={followers:[],following:[]};
+    for(const file of files){
+      const name=file.name.toLowerCase();
+      if(name.endsWith(".zip")){
+        if(!window.JSZip) throw new Error("Library ZIP belum termuat. Periksa koneksi internet lalu muat ulang halaman.");
+        const zip=await JSZip.loadAsync(file);
+        const entries=Object.values(zip.files).filter(x=>!x.dir && x.name.toLowerCase().endsWith(".json"));
+        for(const entry of entries){
+          const n=entry.name.toLowerCase().split("/").pop();
+          if(!/^followers?(_\d+)?\.json$/.test(n) && n!=="following.json") continue;
+          const txt=await entry.async("text");
+          const parsed=parseJsonText(txt);
+          if(n.startsWith("following")) found.following.push(...parsed);
+          else found.followers.push(...parsed);
+        }
+      } else if(name.endsWith(".json")){
+        const parsed=parseJsonText(await file.text());
+        if(name.startsWith("following")) found.following.push(...parsed);
+        else if(name.startsWith("followers")) found.followers.push(...parsed);
+        else throw new Error("Nama file JSON tidak dikenali. Gunakan followers_1.json atau following.json.");
+      }
+    }
+    found.followers=[...new Set(found.followers)];
+    found.following=[...new Set(found.following)];
+    return found;
+  }
+  function updateFileStatus(){
+    const current=state.currentFiles, previous=state.previousFiles;
+    $("currentStatus").textContent=current.length?`${current.length} file dipilih · ${current.map(f=>f.name).join(", ").slice(0,75)}`:"Belum ada file dipilih";
+    $("previousStatus").textContent=previous.length?`${previous.length} file dipilih · ${previous.map(f=>f.name).join(", ").slice(0,75)}`:"Belum ada file dipilih";
+    $("analyzeBtn").disabled=!current.length;
+  }
+  function setFiles(input,which){
+    const files=[...input.files];
+    state[which]=files;
+    updateFileStatus();
+  }
+  $("currentFile").addEventListener("change",e=>setFiles(e.target,"currentFiles"));
+  $("previousFile").addEventListener("change",e=>setFiles(e.target,"previousFiles"));
+  for(const [id,key] of [["currentDrop","currentFiles"],["previousDrop","previousFiles"]]){
+    const zone=$(id);
+    ["dragenter","dragover"].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.add("drag")}));
+    ["dragleave","drop"].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.remove("drag")}));
+    zone.addEventListener("drop",e=>{state[key]=[...e.dataTransfer.files];updateFileStatus()});
+  }
+  $("analyzeBtn").addEventListener("click",async()=>{
+    const btn=$("analyzeBtn");btn.disabled=true;btn.textContent="Reading your files…";
+    try{
+      const current=await readFiles(state.currentFiles);
+      if(!current.followers.length || !current.following.length) throw new Error("Data followers atau following belum ditemukan. Upload ZIP ekspor Instagram yang berisi Followers and following, atau pilih file JSON yang sesuai.");
+      let previous={followers:[],following:[]};
+      if(state.previousFiles.length) previous=await readFiles(state.previousFiles);
+      const F=new Set(current.followers), G=new Set(current.following), oldF=new Set(previous.followers);
+      state.data={
+        unfollow: previous.followers.length?[...oldF].filter(x=>!F.has(x)).sort():[],
+        notback:[...G].filter(x=>!F.has(x)).sort(),
+        new: previous.followers.length?[...F].filter(x=>!oldF.has(x)).sort():[],
+        mutual:[...F].filter(x=>G.has(x)).sort(),
+        followers:[...F].sort(), following:[...G].sort()
+      };
+      $("followersStat").textContent=F.size.toLocaleString("id-ID");
+      $("followingStat").textContent=G.size.toLocaleString("id-ID");
+      $("notBackStat").textContent=state.data.notback.length.toLocaleString("id-ID");
+      $("unfollowStat").textContent=previous.followers.length?state.data.unfollow.length.toLocaleString("id-ID"):"—";
+      $("unfollowFoot").textContent=previous.followers.length?"Dibandingkan dengan data lama":"Upload data lama untuk membandingkan";
+      for(const key of Object.keys(state.data)) $("count-"+key).textContent=state.data[key].length.toLocaleString("id-ID");
+      $("resultCaption").textContent=`${F.size.toLocaleString("id-ID")} followers · ${G.size.toLocaleString("id-ID")} following · Diproses ${new Date().toLocaleString("id-ID")}`;
+      $("results").classList.add("show");
+      $("results").scrollIntoView({behavior:"smooth",block:"start"});
+      switchTab(previous.followers.length?"unfollow":"notback");
+      toast("Analisis selesai. Klik username untuk membuka profil Instagram.");
+    }catch(err){toast(err.message || "Terjadi kesalahan saat membaca file.");}
+    finally{btn.disabled=!state.currentFiles.length;btn.textContent="Analyze my account  →";}
+  });
+  function switchTab(key){
+    state.active=key;
+    document.querySelectorAll(".tab[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===key));
+    $("listTitle").textContent=labels[key][0];$("listDescription").textContent=labels[key][1];
+    $("searchInput").value="";renderList();
+  }
+  document.querySelectorAll(".tab[data-tab]").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));
+  function renderList(){
+    const key=state.active, query=$("searchInput").value.trim().toLowerCase();
+    const users=(state.data[key]||[]).filter(u=>u.includes(query));
+    const container=$("userList");container.innerHTML="";
+    if(!users.length){
+      const message=key==="unfollow"&&!state.data.unfollow.length?"Upload data followers lama untuk mengetahui siapa yang unfollow.": "Tidak ada akun yang cocok dengan pencarian ini.";
+      container.innerHTML=`<div class="empty"><div style="font-size:27px;margin-bottom:10px">✦</div><b>${key==="unfollow"&&!state.data.unfollow.length?"Perlu data pembanding":"Nothing to show"}</b>${message}</div>`;
+      return;
+    }
+    const fragment=document.createDocumentFragment();
+    users.forEach(user=>{
+      const row=document.createElement("div");row.className="user-row";
+      const avatar=document.createElement("div");avatar.className="avatar";avatar.textContent=user.slice(0,2).toUpperCase();
+      const meta=document.createElement("div");meta.className="user-meta";
+      const name=document.createElement("a");name.className="username";name.href=`https://www.instagram.com/${encodeURIComponent(user)}/`;name.target="_blank";name.rel="noopener noreferrer";name.textContent="@"+user;name.title="Buka profil Instagram @"+user;
+      const sub=document.createElement("div");sub.className="user-sub";sub.textContent=key==="unfollow"?"Tidak lagi mengikuti kamu":key==="notback"?"Kamu mengikuti akun ini":"Instagram profile";
+      meta.append(name,sub);
+      const link=document.createElement("a");link.className="profile-link";link.href=name.href;link.target="_blank";link.rel="noopener noreferrer";link.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg><span>View profile</span>';
+      row.append(avatar,meta,link);fragment.append(row);
+    });
+    container.append(fragment);
+  }
+  $("searchInput").addEventListener("input",renderList);
+  function csvEscape(value){return '"'+String(value).replace(/"/g,'""')+'"'}
+  function downloadCsv(rows,name){
+    if(!rows.length){toast("Tidak ada data untuk diekspor.");return}
+    const csv="username,instagram_profile\n"+rows.map(u=>`${csvEscape("@"+u)},${csvEscape("https://www.instagram.com/"+u+"/")}`).join("\n");
+    const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
+    const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);toast("File CSV berhasil dibuat.");
+  }
+  $("exportTabBtn").addEventListener("click",()=>downloadCsv(state.data[state.active]||[],`unfollowinstagram-${state.active}.csv`));
+  $("exportAllBtn").addEventListener("click",()=>{
+    const rows=[];Object.entries(state.data).forEach(([category,users])=>users.forEach(u=>rows.push([category,u])));
+    if(!rows.length){toast("Belum ada data untuk diekspor.");return}
+    const csv="category,username,instagram_profile\n"+rows.map(([c,u])=>[c,"@"+u,"https://www.instagram.com/"+u+"/"].map(csvEscape).join(",")).join("\n");
+    const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="unfollowinstagram-all-results.csv";a.click();URL.revokeObjectURL(url);toast("Semua hasil berhasil diekspor.");
+  });
+  $("copyAllBtn").addEventListener("click",async()=>{
+    const users=state.data[state.active]||[];if(!users.length){toast("Tidak ada username untuk disalin.");return}
+    try{await navigator.clipboard.writeText(users.map(u=>"@"+u).join("\n"));toast(`${users.length} username disalin.`)}catch{toast("Clipboard tidak tersedia di browser ini.")}
+  });
+  $("resetBtn").addEventListener("click",()=>{
+    state.currentFiles=[];state.previousFiles=[];state.data={};
+    $("currentFile").value="";$("previousFile").value="";updateFileStatus();
+    $("results").classList.remove("show");$("uploadCard").scrollIntoView({behavior:"smooth"});
+  });
+  $("howtoBtn").addEventListener("click",()=>$("howtoModal").classList.add("show"));
+  $("closeModal").addEventListener("click",()=>$("howtoModal").classList.remove("show"));
+  $("howtoModal").addEventListener("click",e=>{if(e.target===$("howtoModal"))$("howtoModal").classList.remove("show")});
+})();
+</script>
+</body>
+</html>
